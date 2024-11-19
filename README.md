@@ -64,7 +64,7 @@ FastAPI’s functionality is layered on top of several powerful components:
 
 ASGI, or the Asynchronous Server Gateway Interface, serves as the foundation of FastAPI, enabling asynchronous programming by providing a standardized interface between the application and server. ASGI evolved from WSGI (Web Server Gateway Interface) to support real-time web features like WebSockets and multiple concurrent connections, allowing Python applications to handle high loads without blocking. Currently ASGI protocol describes HTTP/1.1, HTTP/2 and WebSocket.  
 
-**High Level Diagram**
+![High Level Diagram](basic-diagram.png)
 
 Here’s how a request flow of ASGI application looks like from a very high level. When client sends a HTTP request, the ASGI server accepts the request and parse & translate it to `scope` and `events` (we will see details of `scope` and `events` a little bit later). Then, the ASGI app receive the `scope` and `events` and process the request. Now let’s see some details about the ASGI protocol itself.
 
@@ -158,13 +158,13 @@ routes = [
 app = Starlette(debug=True, routes=routes)
 ```
 
-1. **Running the App with Uvicorn**
+2. **Running the App with Uvicorn**
 
 ```bash
 uvicorn app:app --host 127.0.0.1 --port 8000
 ```
 
-1. **Client Request**:
+3. **Client Request**:
 
 ```bash
 curl http://127.0.0.1:8000/hello
@@ -172,7 +172,7 @@ curl http://127.0.0.1:8000/hello
 
 This will return the JSON response `{"message": "Hello, World!"}`.
 
-**Flow Diagram**
+![ASGI Request Lifecycle](asgi-request-lifecycle.png)
 
 Now, let’s follow the request step-by-step, from the moment the client sends an HTTP request to the response being returned.
 
@@ -275,7 +275,7 @@ response_start_event = {
 
 This tells Uvicorn to begin sending the HTTP response headers, with a status code of `200` and a content type of `application/json`.
 
-1. **Sending the Response Body** (`http.response.body`):
+2. **Sending the Response Body** (`http.response.body`):
 
 ```python
 response_body_event = {
@@ -342,7 +342,7 @@ In the example above:
 curl -X POST "<http://127.0.0.1:8000/items/>" -H "Content-Type: application/json" -d '{"name": "Table", "price": 150.0}'
 ```
 
-1. FastAPI validates the request body and returns:
+2. FastAPI validates the request body and returns:
 
 ```json
 {
@@ -354,7 +354,7 @@ curl -X POST "<http://127.0.0.1:8000/items/>" -H "Content-Type: application/json
 }
 ```
 
-1. If a required field (e.g., `name`) is missing, FastAPI will return an automatic validation error with `422` http status code:
+3. If a required field (e.g., `name`) is missing, FastAPI will return an automatic validation error with `422` http status code:
 
 ```json
 {
